@@ -4,21 +4,38 @@ It starts with a start codon (ATG), and ends with a stop codon (TAA; TAG; TGA). 
 
 def reading_frame(filename):
     """ Finds the longest open reading frame (ORF). """
-    current_reading_frame = ''
-    longest_reading_frame = 0
+
+    def find_ORFs(seq):
+         start_codon = 'ATG'
+         stop_codon = {'TAA', 'TAG', 'TGA'}
+         longest_reading_frame = ''
+
+         for k in range(3):
+              i = k
+              while i < len(seq) - 2:
+                   codon = seq[i:i+3]
+                   if codon == start_codon:
+                        j = i + 3
+                        while j < len(seq) - 2:
+                                next_codon = seq[j:j+3]
+                                if next_codon in stop_codon:
+                                    orf = seq[i:j+3]
+                                    if len(orf) > len(longest_reading_frame):
+                                        longest_reading_frame = orf
+                                    break
+                                j += 3
+                        i = j + 3
+                   else:
+                        i += 3
+         return longest_reading_frame
+    
+
+    seq = ''
     with open(filename, 'r') as f:
-        for line in f:
-            if line.startswith('>'):
-                if line.startswith('ATG'):
-                    if line.endswith('TAA', 'TAG', 'TGA'):
-                        if len(current_reading_frame) > longest_reading_frame:
-                            longest_reading_frame = len(current_reading_frame)
-                    current_reading_frame = ''
-            else:
-                current_reading_frame += line.strip()
+         for line in f:
+              if not line.startswith('>'):
+                   seq += line.strip().upper()
+    
+    return find_ORFs(seq)
 
-        if len(current_reading_frame) > longest_reading_frame:
-            longest_reading_frame = len(current_reading_frame)
-                    
-                
-
+print(reading_frame('dna.example.fasta'))
