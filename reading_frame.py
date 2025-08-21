@@ -20,7 +20,7 @@ def reading_frame(filename):
                                 next_codon = seq[j:j+3]
                                 if next_codon in stop_codon:
                                     orf = seq[i:j+3]
-                                    if len(orf) > len(longest_reading_frame):
+                                    if len(orf) > len(longest_reading_frame): # If the open reading frame we found is longer than the previous longest one, it replaces it.
                                         longest_reading_frame = orf
                                     break
                                 j += 3
