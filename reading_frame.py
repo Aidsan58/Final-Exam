@@ -5,7 +5,7 @@ It starts with a start codon (ATG), and ends with a stop codon (TAA; TAG; TGA). 
 def reading_frame(filename):
     """ Finds the longest open reading frame (ORF). """
 
-    def find_ORFs(seq):
+    def find_longest_frame(seq):
          start_codon = 'ATG'
          stop_codon = {'TAA', 'TAG', 'TGA'}
          longest_reading_frame = ''
@@ -28,14 +28,37 @@ def reading_frame(filename):
                    else:
                         i += 3
          return longest_reading_frame
-    
 
-    seq = ''
+    longest_reading_frame = ''
+    longest_identifier = ''
+
     with open(filename, 'r') as f:
+         current_identifier = None
+         current_seq = []
+
          for line in f:
-              if not line.startswith('>'):
-                   seq += line.strip().upper()
+              line = line.strip()
+              if line.startswith('>'):
+                   if current_identifier is not None:
+                        seq = ''.join(current_seq).upper()
+                        orf = find_longest_frame(seq)
+                        if len(orf) > len(longest_reading_frame):
+                             longest_reading_frame = orf
+                             longest_identifier = current_identifier
+
+                   current_identifier = line[1:].split()[0] # This gets the ID from the header.
+                   current_seq = []
+              else:
+                    current_seq.append(line)
+
+         if current_identifier is not None:
+               seq = ''.join(current_seq).upper()
+               orf = find_longest_frame(seq)
+               if len(orf) > len(longest_reading_frame):
+                    longest_reading_frame = orf
+                    longest_identifier = current_identifier
+
+    return longest_identifier, longest_reading_frame
     
-    return find_ORFs(seq)
 
 print(reading_frame('dna.example.fasta'))
