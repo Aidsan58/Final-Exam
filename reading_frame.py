@@ -9,12 +9,14 @@ def reading_frame(filename):
          start_codon = 'ATG'
          stop_codon = {'TAA', 'TAG', 'TGA'}
          longest_reading_frame = ''
+         position = 0
 
          for k in range(3):
               i = k
               while i < len(seq) - 2:
                    codon = seq[i:i+3]
                    if codon == start_codon:
+                        position = i
                         j = i + 3
                         while j < len(seq) - 2:
                                 next_codon = seq[j:j+3]
@@ -27,7 +29,7 @@ def reading_frame(filename):
                         i = j + 3
                    else:
                         i += 3
-         return longest_reading_frame
+         return longest_reading_frame, position
 
     longest_reading_frame = ''
     longest_identifier = ''
