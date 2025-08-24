@@ -3,7 +3,7 @@ def repeat(filename, n):
         seen = set()
         repeats = set()
         
-        for i in range(len(seq) - n + 1):
+        for i in range(len(seq) - n + 1): # Two sets are created, one called seen which has all substrings of a certain length, and one called repeats which contains all repeats of length n.
             substring = seq[i:i+n]
             if substring in seen:
                 repeats.add(substring)
@@ -24,9 +24,9 @@ def repeat(filename, n):
                     num_repeats += len(repeats)
                     current_sequence = ''
             else:
-                current_sequence += line.strip()
+                current_sequence += line.strip() # Goes to the next sequence once the previous one has been read through.
 
-        if current_sequence:
+        if current_sequence: # This part of the code checks the last sequence for repeats.
             repeats = find_repeats(current_sequence.upper(), n)
             num_repeats += len(repeats)
                 
